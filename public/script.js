@@ -38,6 +38,7 @@ const I18N = {
         barrel: 'بشکه',
         noData: 'داده‌ای دریافت نشد',
         iranTag: 'ایران',
+        sensitive: 'حساس',
     },
     en: {
         brand: 'Iran News',
@@ -76,6 +77,7 @@ const I18N = {
         barrel: 'barrel',
         noData: 'No data',
         iranTag: 'Iran',
+        sensitive: 'Sensitive',
     },
 };
 
@@ -350,11 +352,12 @@ function newsCard(it) {
     const dir = isFa() ? 'rtl' : 'ltr';
 
     return `
-        <article class="news-card">
+        <article class="news-card${it.sensitive ? ' is-sensitive' : ''}">
             <div class="card-top">
                 <span class="lang-badge" data-lang="${escapeHtml(it.lang)}">${escapeHtml(LANG_LABEL[it.lang] || it.lang)}</span>
                 <span class="source">${escapeHtml(it.flag || '🌐')} ${escapeHtml(sourceName)}</span>
                 <span class="iran-flag">${escapeHtml(t('iranTag'))}</span>
+                ${it.sensitive ? `<span class="sensitive-tag">⚠ ${escapeHtml(t('sensitive'))}</span>` : ''}
                 <span class="time">${timeAgo(it.published)}</span>
             </div>
             <h3 class="news-title" dir="${dir}">${escapeHtml(titleFor(it))}</h3>

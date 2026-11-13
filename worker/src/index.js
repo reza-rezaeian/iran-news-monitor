@@ -338,7 +338,8 @@ async function assemble(env) {
         'source_en', source_en,
         'lang', lang,
         'flag', flag,
-        'published', published
+        'published', published,
+        'sensitive', high
       )) AS items,
       COUNT(*) AS total,
       COALESCE(SUM(high), 0) AS high,

@@ -318,7 +318,8 @@ def parse_feed(content, feed):
             "title": title,
             "link": link or "#",
             "description": desc[:280],
-            "published": dt.isoformat() if dt else None,
+            "published": (dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+                          if dt else None),
             "_ts": dt.timestamp() if dt else 0,
             "source": feed["name"],
             "source_en": feed.get("name_en", feed["name"]),
@@ -416,6 +417,7 @@ def build_news(force_translate_limit=160):
         related = is_iran_related(it["title"] + " " + it.get("description", ""))
         if related:
             it["iran"] = True
+            it["sensitive"] = bool(HIGH_RE.search(it["title"] + " " + it.get("description", "")))
             iran_items.append(it)
     unique = iran_items
     unique.sort(key=lambda x: x["_ts"], reverse=True)

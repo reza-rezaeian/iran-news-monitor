@@ -583,6 +583,27 @@ html[dir="ltr"] .brand-text h1 {
     border-radius: 6px;
 }
 
+/* تگ خبر حساس */
+.sensitive-tag {
+    font-size: 0.66rem;
+    font-weight: 800;
+    color: #fff;
+    background: #c62828;
+    border: 1px solid #a91f1f;
+    padding: 2px 7px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.news-card.is-sensitive {
+    border-color: #f0c3be;
+    box-shadow: inset 3px 0 0 #e53935, var(--shadow-sm);
+}
+
+html[dir="ltr"] .news-card.is-sensitive {
+    box-shadow: inset -3px 0 0 #e53935, var(--shadow-sm);
+}
+
 .time {
     margin-inline-start: auto;
     white-space: nowrap;
