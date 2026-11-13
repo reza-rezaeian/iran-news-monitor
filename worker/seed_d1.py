@@ -47,11 +47,11 @@ def main():
 
         lines.append(
             "INSERT OR IGNORE INTO items "
-            "(id,title,title_fa,title_en,link,source,source_en,lang,flag,published,high,medium) "
+            "(id,title,title_fa,title_en,link,source,source_en,lang,flag,published,high,medium,domestic) "
             f"VALUES ({q(item_id(it['title']))},{q(it['title'])},{q(it.get('title_fa'))},"
             f"{q(it.get('title_en'))},{q(it.get('link'))},{q(it.get('source'))},"
             f"{q(it.get('source_en'))},{q(it.get('lang'))},{q(it.get('flag'))},"
-            f"{q(it.get('published'))},{high},{med});"
+            f"{q(it.get('published'))},{high},{med},{1 if it.get('domestic') else 0});"
         )
 
     body = json.dumps(news, ensure_ascii=False)

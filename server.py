@@ -55,8 +55,8 @@ FEEDS = [
     {"name": "دویچه‌وله فارسی", "name_en": "DW Persian", "url": "https://rss.dw.com/xml/rss-per-all", "lang": "fa", "flag": "🇩🇪", "iran": False},
     {"name": "ایران اینترنشنال", "name_en": "Iran International", "url": "https://www.iranintl.com/feed", "lang": "fa", "flag": "🇮🇷", "iran": True},
     {"name": "یورونیوز فارسی", "name_en": "Euronews Persian", "url": "https://parsi.euronews.com/rss", "lang": "fa", "flag": "🇪🇺", "iran": False},
-    {"name": "ایرنا", "name_en": "IRNA", "url": "https://www.irna.ir/rss", "lang": "fa", "flag": "🇮🇷", "iran": True},
-    {"name": "ایسنا", "name_en": "ISNA", "url": "https://www.isna.ir/rss", "lang": "fa", "flag": "🇮🇷", "iran": True},
+    {"name": "ایرنا", "name_en": "IRNA", "url": "https://www.irna.ir/rss", "lang": "fa", "flag": "🇮🇷", "iran": True, "domestic": True},
+    {"name": "ایسنا", "name_en": "ISNA", "url": "https://www.isna.ir/rss", "lang": "fa", "flag": "🇮🇷", "iran": True, "domestic": True},
     # انگلیسی
     {"name": "BBC World", "name_en": "BBC World", "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "lang": "en", "flag": "🇬🇧", "iran": False},
     {"name": "BBC Middle East", "name_en": "BBC Middle East", "url": "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml", "lang": "en", "flag": "🇬🇧", "iran": False},
@@ -326,6 +326,7 @@ def parse_feed(content, feed):
             "lang": feed["lang"],
             "flag": feed.get("flag", "🌐"),
             "feed_iran": feed.get("iran", False),
+            "domestic": feed.get("domestic", False),
         })
     return items
 

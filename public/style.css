@@ -440,6 +440,14 @@ html[dir="ltr"] .brand-text h1 {
     transform: translateX(-18px);
 }
 
+html[dir="ltr"] .toggle input:checked + .toggle-track .toggle-thumb {
+    transform: translateX(18px);
+}
+
+.hide-domestic {
+    white-space: nowrap;
+}
+
 .toggle-text {
     font-size: 0.84rem;
     color: var(--text-soft);

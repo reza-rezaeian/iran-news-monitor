@@ -13,8 +13,8 @@ const FEEDS = [
   { name: "دویچه‌وله فارسی", name_en: "DW Persian", url: "https://rss.dw.com/xml/rss-per-all", lang: "fa", flag: "🇩🇪" },
   { name: "ایران اینترنشنال", name_en: "Iran International", url: "https://www.iranintl.com/feed", lang: "fa", flag: "🇮🇷" },
   { name: "یورونیوز فارسی", name_en: "Euronews Persian", url: "https://parsi.euronews.com/rss", lang: "fa", flag: "🇪🇺" },
-  { name: "ایرنا", name_en: "IRNA", url: "https://www.irna.ir/rss", lang: "fa", flag: "🇮🇷" },
-  { name: "ایسنا", name_en: "ISNA", url: "https://www.isna.ir/rss", lang: "fa", flag: "🇮🇷" },
+  { name: "ایرنا", name_en: "IRNA", url: "https://www.irna.ir/rss", lang: "fa", flag: "🇮🇷", domestic: true },
+  { name: "ایسنا", name_en: "ISNA", url: "https://www.isna.ir/rss", lang: "fa", flag: "🇮🇷", domestic: true },
   { name: "BBC World", name_en: "BBC World", url: "https://feeds.bbci.co.uk/news/world/rss.xml", lang: "en", flag: "🇬🇧" },
   { name: "BBC Middle East", name_en: "BBC Middle East", url: "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml", lang: "en", flag: "🇬🇧" },
   { name: "Al Jazeera English", name_en: "Al Jazeera English", url: "https://www.aljazeera.com/xml/rss/all.xml", lang: "en", flag: "🇶🇦" },
@@ -173,6 +173,7 @@ function parseFeed(xml, feed) {
       source_en: feed.name_en,
       lang: feed.lang,
       flag: feed.flag,
+      domestic: feed.domestic ? 1 : 0,
     });
   }
   return out;
@@ -285,15 +286,15 @@ async function ingest(env, feedIndex) {
 
     const stmt = env.DB.prepare(
       `INSERT OR IGNORE INTO items
-       (id, title, title_fa, title_en, link, source, source_en, lang, flag, published, high, medium)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+       (id, title, title_fa, title_en, link, source, source_en, lang, flag, published, high, medium, domestic)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     );
     await env.DB.batch(
       fresh.map((it) =>
         stmt.bind(
           it.id, it.title, it.title_fa, it.title_en, it.link,
           it.source, it.source_en, it.lang, it.flag, it.published,
-          it.high, it.medium,
+          it.high, it.medium, it.domestic,
         ),
       ),
     );
@@ -339,7 +340,8 @@ async function assemble(env) {
         'lang', lang,
         'flag', flag,
         'published', published,
-        'sensitive', high
+        'sensitive', high,
+        'domestic', domestic
       )) AS items,
       COUNT(*) AS total,
       COALESCE(SUM(high), 0) AS high,

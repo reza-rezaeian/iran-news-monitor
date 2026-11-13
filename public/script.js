@@ -39,6 +39,8 @@ const I18N = {
         noData: 'داده‌ای دریافت نشد',
         iranTag: 'ایران',
         sensitive: 'حساس',
+        hideDomestic: 'بدون خبرگزاری‌های ایران',
+        hideDomesticHint: 'ایسنا، ایرنا و خبرگزاری‌های مستقر در ایران نمایش داده نشوند',
     },
     en: {
         brand: 'Iran News',
@@ -78,6 +80,8 @@ const I18N = {
         noData: 'No data',
         iranTag: 'Iran',
         sensitive: 'Sensitive',
+        hideDomestic: 'Hide Iranian agencies',
+        hideDomesticHint: 'Hide agencies based inside Iran, such as IRNA and ISNA',
     },
 };
 
@@ -91,6 +95,7 @@ const state = {
     updated: null,
     lang: 'all',
     query: '',
+    hideDomestic: localStorage.getItem('hideDomestic') === '1',
     targetLang: 'en',
     targetManual: false,
     visible: 24,
@@ -157,9 +162,15 @@ function applyLanguage() {
     document.querySelectorAll('[data-i18n-ph]').forEach((node) => {
         node.placeholder = t(node.dataset.i18nPh);
     });
+    document.querySelectorAll('[data-i18n-title]').forEach((node) => {
+        node.title = t(node.dataset.i18nTitle);
+    });
     document.querySelectorAll('.ui-lang-btn').forEach((b) => {
         b.classList.toggle('active', b.dataset.ui === lang);
     });
+
+    const hideBox = el('hide-domestic');
+    if (hideBox) hideBox.checked = state.hideDomestic;
 
     if (!state.targetManual) {
         state.targetLang = lang === 'fa' ? 'en' : 'fa';
@@ -296,6 +307,7 @@ function showSkeletons() {
 function filteredNews() {
     const q = state.query.trim().toLowerCase();
     return state.news.filter((it) => {
+        if (state.hideDomestic && it.domestic) return false;
         if (state.lang !== 'all' && it.lang !== state.lang) return false;
         if (q) {
             const hay = `${it.title_fa} ${it.title_en} ${it.title} ${it.source}`.toLowerCase();
@@ -409,6 +421,13 @@ function bindControls() {
             state.visible = 24;
             renderNews();
         }, 180);
+    });
+
+    el('hide-domestic').addEventListener('change', (e) => {
+        state.hideDomestic = e.target.checked;
+        localStorage.setItem('hideDomestic', state.hideDomestic ? '1' : '0');
+        state.visible = 24;
+        renderNews();
     });
 
     el('translate-target').addEventListener('change', (e) => {

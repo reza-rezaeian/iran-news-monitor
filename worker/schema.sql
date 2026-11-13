@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS items (
     flag       TEXT,
     published  TEXT,
     high       INTEGER DEFAULT 0,
-    medium     INTEGER DEFAULT 0
+    medium     INTEGER DEFAULT 0,
+    domestic   INTEGER DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_items_published ON items (published DESC);
