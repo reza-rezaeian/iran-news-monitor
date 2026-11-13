@@ -1,5 +1,7 @@
 # خبر ایران | Iran News Monitor
 
+**نسخه آنلاین:** https://iran-news.rezaariaii.workers.dev
+
 تجمیع لحظه‌ای اخبار ایران از منابع فارسی، انگلیسی، عبری و عربی، با ترجمه خودکار عنوان‌ها، قیمت طلا/نفت و شاخص نزدیکی جنگ. رابط کاربری دوزبانه (فارسی/انگلیسی).
 
 ## معماری
@@ -48,7 +50,10 @@ python3 server.py          # http://localhost:8080
 
 ```bash
 python3 build_static.py    # خروجی: dist/data/*.json
+./update_data.sh           # ساخت + انتشار در برنچ data (جایگزین Actions)
 ```
+
+بعد از انتشار، Worker حداکثر تا ۵ دقیقه (TTL کش لبه) نسخه تازه را نشان می‌دهد.
 
 ## منابع
 
