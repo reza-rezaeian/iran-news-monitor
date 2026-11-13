@@ -31,7 +31,7 @@ npx wrangler deploy
 Worker به‌صورت خودکار `public/` را سرو می‌کند و داده را از این آدرس می‌خواند:
 
 ```
-https://raw.githubusercontent.com/Reza-rezzz/iran-news-monitor/data/news.json
+https://raw.githubusercontent.com/reza-rezaeian/iran-news-monitor/data/news.json
 ```
 
 برای تغییر آدرس، مقدار `DATA_BASE` را در `worker/wrangler.jsonc` عوض کنید.

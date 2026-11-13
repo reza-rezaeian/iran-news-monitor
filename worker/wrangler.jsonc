@@ -8,7 +8,7 @@
     "directory": "../public"
   },
   "vars": {
-    "DATA_BASE": "https://raw.githubusercontent.com/Reza-rezzz/iran-news-monitor/data"
+    "DATA_BASE": "https://raw.githubusercontent.com/reza-rezaeian/iran-news-monitor/data"
   },
   "observability": {
     "enabled": true
