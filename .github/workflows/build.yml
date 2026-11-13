@@ -1,0 +1,55 @@
+name: Build news data
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-news-data
+  cancel-in-progress: false
+
+env:
+  DATA_URL: https://raw.githubusercontent.com/${{ github.repository }}/data
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restore previous data and translation cache
+        run: |
+          mkdir -p dist/data
+          curl -fsSL "$DATA_URL/translations_cache.json" -o translations_cache.json || true
+          curl -fsSL "$DATA_URL/news.json" -o dist/data/news.json || true
+          curl -fsSL "$DATA_URL/prices.json" -o dist/data/prices.json || true
+
+      - name: Build news and prices
+        run: python3 build_static.py
+
+      - name: Publish data branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p publish
+          cp dist/data/*.json publish/
+          cp translations_cache.json publish/
+          cd publish
+          git init -q -b data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "data: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data

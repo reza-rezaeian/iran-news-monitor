@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+
+# Runtime cache (news is rebuilt; translations cache is kept on purpose)
+news_cache.json
+
+# Build output
+dist/
+.publish/
+
+# Wrangler
+worker/.wrangler/
+worker/node_modules/
+worker/package-lock.json
+
+# macOS
+.DS_Store

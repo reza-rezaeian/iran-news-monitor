@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خبر ایران | Iran News Monitor</title>
+    <meta name="description" content="Iran news from Persian, English, Hebrew and Arabic sources, auto-translated to Persian and English, with gold and oil prices and a war-risk index.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="brand">
+                <div class="brand-mark">خ</div>
+                <div class="brand-text">
+                    <h1 data-i18n="brand">خبر ایران</h1>
+                    <p data-i18n="subtitle">پایش لحظه‌ای اخبار ایران و بازار</p>
+                </div>
+            </div>
+            <div class="header-meta">
+                <div class="ui-lang" id="ui-lang" role="group" aria-label="Language">
+                    <button class="ui-lang-btn active" data-ui="fa" type="button">فارسی</button>
+                    <button class="ui-lang-btn" data-ui="en" type="button">English</button>
+                </div>
+                <span class="clock" id="clock">--:--</span>
+                <button id="refresh-btn" class="refresh-btn" type="button">
+                    <svg class="refresh-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+                         stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12a9 9 0 1 1-2.64-6.36"></path>
+                        <path d="M21 3v6h-6"></path>
+                    </svg>
+                    <span data-i18n="refresh">به‌روزرسانی</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- داشبورد قیمت‌ها و شاخص -->
+        <section class="stats" aria-label="Key indicators">
+            <article class="stat-card stat-gold">
+                <div class="stat-head">
+                    <span class="stat-icon">🥇</span>
+                    <span class="stat-label" data-i18n="gold">طلا (۱۸ عیار)</span>
+                </div>
+                <div class="stat-value" id="gold-value">—</div>
+                <div class="stat-sub" id="gold-sub">…</div>
+            </article>
+
+            <article class="stat-card stat-oil">
+                <div class="stat-head">
+                    <span class="stat-icon">🛢️</span>
+                    <span class="stat-label">WTI</span>
+                </div>
+                <div class="stat-value" id="wti-value">—</div>
+                <div class="stat-sub" id="wti-sub">…</div>
+            </article>
+
+            <article class="stat-card stat-oil">
+                <div class="stat-head">
+                    <span class="stat-icon">🛢️</span>
+                    <span class="stat-label" data-i18n="brent">نفت برنت</span>
+                </div>
+                <div class="stat-value" id="brent-value">—</div>
+                <div class="stat-sub" id="brent-sub">…</div>
+            </article>
+
+            <article class="stat-card stat-war">
+                <div class="stat-head">
+                    <span class="stat-icon">⚠️</span>
+                    <span class="stat-label" data-i18n="war">شاخص نزدیکی جنگ</span>
+                </div>
+                <div class="war-body">
+                    <div class="gauge">
+                        <svg viewBox="0 0 120 120" aria-hidden="true">
+                            <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+                            <circle class="gauge-fg" id="gauge-fg" cx="60" cy="60" r="52"></circle>
+                        </svg>
+                        <div class="gauge-center"><span id="war-score">۰٪</span></div>
+                    </div>
+                    <div class="war-info">
+                        <strong id="war-label">—</strong>
+                        <span id="war-detail"></span>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <!-- کنترل‌ها -->
+        <section class="controls" aria-label="Filters">
+            <div class="lang-tabs" id="lang-tabs" role="tablist">
+                <button class="lang-tab active" data-lang="all" type="button" data-i18n="all">همه</button>
+                <button class="lang-tab" data-lang="fa" type="button" data-i18n="fa">فارسی</button>
+                <button class="lang-tab" data-lang="en" type="button" data-i18n="en">انگلیسی</button>
+                <button class="lang-tab" data-lang="he" type="button" data-i18n="he">عبری</button>
+                <button class="lang-tab" data-lang="ar" type="button" data-i18n="ar">عربی</button>
+            </div>
+
+            <div class="controls-right">
+                <div class="search-box">
+                    <span class="search-icon">⌕</span>
+                    <input type="search" id="search" placeholder="جستجو…" data-i18n-ph="search">
+                </div>
+
+                <label class="translate-lang">
+                    <span data-i18n="translateTo">ترجمه به</span>
+                    <select id="translate-target">
+                        <option value="en">English</option>
+                        <option value="fa">فارسی</option>
+                        <option value="ar">العربية</option>
+                        <option value="he">עברית</option>
+                        <option value="tr">Türkçe</option>
+                        <option value="de">Deutsch</option>
+                        <option value="fr">Français</option>
+                        <option value="ru">Русский</option>
+                        <option value="zh-CN">中文</option>
+                    </select>
+                </label>
+            </div>
+        </section>
+
+        <div class="result-bar">
+            <span id="result-count"></span>
+            <span id="last-updated" class="last-updated"></span>
+        </div>
+
+        <!-- اخبار -->
+        <section class="news-grid" id="news-grid" aria-live="polite">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+        </section>
+
+        <div class="load-more-wrap">
+            <button id="load-more" class="load-more" type="button" data-i18n="loadMore" hidden>نمایش اخبار بیشتر</button>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p data-i18n="footer">خبر ایران — تجمیع اخبار ایران از منابع فارسی، انگلیسی، عبری و عربی</p>
+            <p class="footer-note" data-i18n="footerNote">
+                شاخص نزدیکی جنگ یک تخمین آماری بر پایه کلمات کلیدی خبرهاست و توصیه یا پیش‌بینی نیست.
+                قیمت‌ها از منابع عمومی دریافت می‌شوند و ممکن است با بازار داخلی تفاوت داشته باشند.
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

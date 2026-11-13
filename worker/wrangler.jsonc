@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "iran-news",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-01",
+  "account_id": "6f4bdb35b2d88c4c5af36d9e7a98deb9",
+  "assets": {
+    "directory": "../public"
+  },
+  "vars": {
+    "DATA_BASE": "https://raw.githubusercontent.com/Reza-rezzz/iran-news-monitor/data"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
