@@ -2,17 +2,18 @@
 __pycache__/
 *.pyc
 
-# Runtime cache (news is rebuilt; translations cache is kept on purpose)
+# Runtime cache
 news_cache.json
 
-# Build output
+# Generated
 dist/
 .publish/
+worker/seed.sql
+worker/.admin_key
 
 # Wrangler
 worker/.wrangler/
 worker/node_modules/
-worker/package-lock.json
 
 # macOS
 .DS_Store

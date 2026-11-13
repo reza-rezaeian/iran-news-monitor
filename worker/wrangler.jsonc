@@ -7,8 +7,15 @@
   "assets": {
     "directory": "../public"
   },
-  "vars": {
-    "DATA_BASE": "https://raw.githubusercontent.com/reza-rezaeian/iran-news-monitor/data"
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "iran-news",
+      "database_id": "daaf4460-493c-4536-a2df-efa10179376d"
+    }
+  ],
+  "triggers": {
+    "crons": ["* * * * *", "*/5 * * * *", "*/10 * * * *"]
   },
   "observability": {
     "enabled": true

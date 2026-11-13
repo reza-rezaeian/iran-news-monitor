@@ -189,11 +189,11 @@ function setChange(node, pct) {
     node.appendChild(span);
 }
 
-async function loadPrices() {
+async function loadPrices(force = false) {
     if (state.loadingPrices) return;
     state.loadingPrices = true;
     try {
-        const res = await fetch('/api/prices', { cache: 'no-store' });
+        const res = await fetch('/api/prices' + (force ? '?refresh=1' : ''), { cache: 'no-store' });
         state.prices = await res.json();
         renderPrices();
     } catch (err) {
@@ -421,7 +421,7 @@ function bindControls() {
     el('refresh-btn').addEventListener('click', async () => {
         const b = el('refresh-btn');
         b.classList.add('spinning');
-        await Promise.allSettled([loadNews(true), loadPrices()]);
+        await Promise.allSettled([loadNews(true), loadPrices(true)]);
         setTimeout(() => b.classList.remove('spinning'), 700);
     });
 }
