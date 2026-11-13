@@ -56,8 +56,8 @@ const IRAN_TERMS = [
   "shiraz", "ahvaz", "abadan", "kermanshah", "hormuz", "khuzestan",
   "baluchistan", "caspian", "arak", "bushehr",
   // عربی
-  "إيران", "إيراني", "طهران", "الحرس الثوري", "خامنئي", "بزشكيان", "رئيسي",
-  "ظريف", "عراقجي", "الخليج الفارسي", "مضيق هرمز", "الاتفاق النووي",
+  "إيران", "إيراني", "طهران", "الحرس الثوري", "خامنئي", "بزشكيان",
+  "عراقجي", "الخليج الفارسي", "مضيق هرمز", "الاتفاق النووي",
   "تخصيب اليورانيوم", "أصفهان", "تبريز", "مشهد", "شيراز", "الأهواز",
   "عبادان", "كرمانشاه", "هرمز", "نطنز", "فردو",
   // عبری
@@ -91,15 +91,29 @@ const SOURCES_JSON = JSON.stringify(
 /* ----------------------------- regexes ----------------------------- */
 
 const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// عبارت‌های کوتاه باید مرز واژه داشته باشند تا «قم» با «برقم» یا «software» با «war» تطبیق نکند
+function termPattern(term, shortMax) {
+  const t = term.toLowerCase();
+  const escaped = escRe(t);
+  const latin = /^[a-z0-9 .'-]+$/i.test(t);
+  if (latin && t.length <= 4) return `\\b${escaped}\\b`;
+  if (t.length <= shortMax) return `(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`;
+  return escaped;
+}
+
+const buildTermRegex = (terms, shortMax = 2) =>
+  new RegExp(terms.map((t) => termPattern(t, shortMax)).join("|"), "iu");
+
 let IRAN_RE = null;
 let HIGH_RE = null;
 let MED_RE = null;
 
 function ensureRegex() {
   if (IRAN_RE) return;
-  IRAN_RE = new RegExp(IRAN_TERMS.map((t) => escRe(t.toLowerCase())).join("|"), "i");
-  HIGH_RE = new RegExp(HIGH_WAR.map((t) => escRe(t.toLowerCase())).join("|"), "i");
-  MED_RE = new RegExp(MED_WAR.map((t) => escRe(t.toLowerCase())).join("|"), "i");
+  IRAN_RE = buildTermRegex(IRAN_TERMS, 3);
+  HIGH_RE = buildTermRegex(HIGH_WAR);
+  MED_RE = buildTermRegex(MED_WAR);
 }
 
 /* ----------------------------- parsing ----------------------------- */

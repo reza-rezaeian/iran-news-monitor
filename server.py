@@ -98,12 +98,11 @@ IRAN_TERMS = [
     "natanz", "fordow", "Isfahan", "tabriz", "mashhad", "shiraz", "ahvaz",
     "abadan", "kermanshah", "hormuz", "khuzestan", "baluchistan", "caspian",
     "arak", "bushehr", "إيران", "إيراني", "طهران", "الحرس الثوري", "خامنئي",
-    "بزشكيان", "رئيسي", "ظريف", "عراقجي", "الخليج الفارسي", "مضيق هرمز",
-    "الاتفاق النووي", "تخصيب اليورانيوم", "أصفهان", "تبريز", "مشهد", "شيراز",
-    "الأهواز", "عبادان", "كرمانشاه", "هرمز", "نطنز", "فردو", "איראן", "איראני",
-    "טהרן", "חמינאי", "משמרות המהפכה", "פזשכיאן", "ראיסי", "זריף", "המפרץ הפרסי",
-    "מצר הורמוז", "הגרעין האיראני", "איספהאן", "טהראן", "ח'וזיסטן", "נתנז",
-    "פורדו",
+    "بزشكيان", "عراقجي", "الخليج الفارسي", "مضيق هرمز", "الاتفاق النووي",
+    "تخصيب اليورانيوم", "أصفهان", "تبريز", "مشهد", "شيراز", "الأهواز", "عبادان",
+    "كرمانشاه", "هرمز", "نطنز", "فردو", "איראן", "איראני", "טהרן", "חמינאי",
+    "משמרות המהפכה", "פזשכיאן", "ראיסי", "זריף", "המפרץ הפרסי", "מצר הורמוז",
+    "הגרעין האיראני", "איספהאן", "טהראן", "ח'וזיסטן", "נתנז", "פורדו",
 ]
 
 HIGH_WAR = ["جنگ", "حمله", "موشک", "بمباران", "هجوم", "قصف", "حرب", "اشغال",
@@ -113,6 +112,22 @@ MED_WAR = ["تهدید", "نظامی", "تنش", "تحریم", "پهپاد", "ه
            "threat", "military", "tension", "sanction", "drone", "nuclear",
            "enrichment", "איום", "צבא", "מתיחות", "סנקציות", "גרעין",
            "تهديد", "عسكري", "توتر", "عقوبات", "نووي"]
+
+
+def _term_pattern(term):
+    """مرز واژه برای عبارت‌های کوتاه تا «قم» با «برقم» تطبیق نکند."""
+    t = term.lower()
+    e = re.escape(t)
+    if re.fullmatch(r"[a-z0-9 .'-]+", t) and len(t) <= 4:
+        return rf"\b{e}\b"
+    if len(t) <= 2:
+        return rf"(?<!\w){e}(?!\w)"
+    return e
+
+
+IRAN_RE = re.compile("|".join(_term_pattern(t) for t in IRAN_TERMS), re.I)
+HIGH_RE = re.compile("|".join(_term_pattern(t) for t in HIGH_WAR), re.I)
+MED_RE = re.compile("|".join(_term_pattern(t) for t in MED_WAR), re.I)
 
 # ----------------------------- ترجمه -----------------------------
 _trans_lock = threading.Lock()
@@ -315,8 +330,7 @@ def parse_feed(content, feed):
 
 
 def is_iran_related(text):
-    t = text.lower()
-    return any(term.lower() in t for term in IRAN_TERMS)
+    return bool(IRAN_RE.search(text))
 
 
 def compute_war_index(items):
@@ -330,9 +344,9 @@ def compute_war_index(items):
     high = med = 0
     for it in scope:
         text = scrub(it)
-        if any(k.lower() in text for k in HIGH_WAR):
+        if HIGH_RE.search(text):
             high += 1
-        elif any(k.lower() in text for k in MED_WAR):
+        elif MED_RE.search(text):
             med += 1
 
     total = max(len(scope), 1)

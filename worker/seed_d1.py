@@ -10,13 +10,10 @@ NEWS = os.path.join(BASE, "dist", "data", "news.json")
 PRICES = os.path.join(BASE, "dist", "data", "prices.json")
 OUT = os.path.join(BASE, "worker", "seed.sql")
 
-HIGH_WAR = ["جنگ", "حمله", "موشک", "بمباران", "هجوم", "قصف", "حرب", "اشغال",
-            "war", "attack", "missile", "airstrike", "bombing", "invasion",
-            "מלחמה", "תקיפה", "טילים", "פיגוע"]
-MED_WAR = ["تهدید", "نظامی", "تنش", "تحریم", "پهپاد", "هسته‌ای", "غنی‌سازی",
-           "threat", "military", "tension", "sanction", "drone", "nuclear",
-           "enrichment", "איום", "צבא", "מתיחות", "סנקציות", "גרעין",
-           "تهديد", "عسكري", "توتر", "عقوبات", "نووي"]
+import sys
+sys.path.insert(0, BASE)
+
+import server  # برای استفاده از همان منطق کلیدواژه‌ها
 
 
 def item_id(title):
@@ -45,8 +42,8 @@ def main():
     for it in news["items"]:
         text = (it.get("title", "") + " " + it.get("title_fa", "") + " " +
                 it.get("description", "")).lower()
-        high = 1 if any(k.lower() in text for k in HIGH_WAR) else 0
-        med = 0 if high else (1 if any(k.lower() in text for k in MED_WAR) else 0)
+        high = 1 if server.HIGH_RE.search(text) else 0
+        med = 0 if high else (1 if server.MED_RE.search(text) else 0)
 
         lines.append(
             "INSERT OR IGNORE INTO items "
